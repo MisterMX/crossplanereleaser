@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/afero"
 	"sigs.k8s.io/yaml"
 
-	v1 "github.com/mistermx/xpreleaser/config/v1"
+	v1 "github.com/mistermx/crossplanereleaser/config/v1"
 )
 
 const (

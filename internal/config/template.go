@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"text/template"
 
-	v1 "github.com/mistermx/xpreleaser/config/v1"
+	v1 "github.com/mistermx/crossplanereleaser/config/v1"
 	"github.com/pkg/errors"
 )
 

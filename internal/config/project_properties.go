@@ -4,8 +4,8 @@ import (
 	"os"
 	"strings"
 
-	v1 "github.com/mistermx/xpreleaser/config/v1"
-	"github.com/mistermx/xpreleaser/internal/git"
+	v1 "github.com/mistermx/crossplanereleaser/config/v1"
+	"github.com/mistermx/crossplanereleaser/internal/git"
 )
 
 type ProjectProperties struct {

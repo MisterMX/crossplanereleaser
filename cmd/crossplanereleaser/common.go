@@ -4,9 +4,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 
-	v1 "github.com/mistermx/xpreleaser/config/v1"
-	"github.com/mistermx/xpreleaser/internal/config"
-	"github.com/mistermx/xpreleaser/internal/git"
+	v1 "github.com/mistermx/crossplanereleaser/config/v1"
+	"github.com/mistermx/crossplanereleaser/internal/config"
+	"github.com/mistermx/crossplanereleaser/internal/git"
 )
 
 func getConfig(fsys afero.Fs, g git.Backend) (*v1.Config, error) {

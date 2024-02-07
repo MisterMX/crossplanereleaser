@@ -4,9 +4,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 
-	v1 "github.com/mistermx/xpreleaser/config/v1"
-	"github.com/mistermx/xpreleaser/internal/git"
-	"github.com/mistermx/xpreleaser/internal/xpkg/release"
+	v1 "github.com/mistermx/crossplanereleaser/config/v1"
+	"github.com/mistermx/crossplanereleaser/internal/git"
+	"github.com/mistermx/crossplanereleaser/internal/xpkg/release"
 )
 
 type releaseCmd struct {

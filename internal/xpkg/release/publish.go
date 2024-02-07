@@ -6,8 +6,8 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/tarball"
 	"github.com/pkg/errors"
 
-	configv1 "github.com/mistermx/xpreleaser/config/v1"
-	"github.com/mistermx/xpreleaser/internal/xpkg/build"
+	configv1 "github.com/mistermx/crossplanereleaser/config/v1"
+	"github.com/mistermx/crossplanereleaser/internal/xpkg/build"
 )
 
 type ImagePublisherBackend interface {

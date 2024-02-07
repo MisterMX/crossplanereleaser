@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
-	"github.com/mistermx/xpreleaser/internal/xpkg"
+	"github.com/mistermx/crossplanereleaser/internal/xpkg"
 )
 
 type ParserBackend interface {

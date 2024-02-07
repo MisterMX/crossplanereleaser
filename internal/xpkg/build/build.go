@@ -9,7 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
 
-	"github.com/mistermx/xpreleaser/internal/xpkg"
+	"github.com/mistermx/crossplanereleaser/internal/xpkg"
 )
 
 type BuilderBackend interface {
