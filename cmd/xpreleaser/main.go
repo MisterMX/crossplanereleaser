@@ -10,7 +10,8 @@ import (
 )
 
 var cli struct {
-	Build buildCmd `cmd:"build" help:"Build artifacts"`
+	Build   buildCmd   `cmd:"build" help:"Build artifacts"`
+	Release releaseCmd `cmd:"release" help:"Release and publish artifacts"`
 
 	Version versionCmd `cmd:"version" help:"Print version information"`
 }

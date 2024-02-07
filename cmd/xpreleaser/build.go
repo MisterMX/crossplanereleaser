@@ -4,7 +4,6 @@ import (
 	"context"
 	"path/filepath"
 
-	"github.com/go-log/log"
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 
@@ -14,10 +13,9 @@ import (
 	"github.com/mistermx/xpreleaser/internal/xpkg/parse"
 )
 
-type buildCmd struct {
-}
+type buildCmd struct{}
 
-func (c *buildCmd) Run(fsys afero.Fs, logger log.Logger) error {
+func (c *buildCmd) Run(fsys afero.Fs) error {
 	cfgFileName, err := config.FindConfigFile(fsys)
 	if err != nil {
 		return errors.Wrap(err, "cannot find config file")
@@ -53,7 +51,7 @@ func buildPackage(fsys afero.Fs, cfg *v1.Config, pkgCfg *v1.XPackageConfig) erro
 	if err := build.BuildImage(ctx, buildBackend, pkg); err != nil {
 		return errors.Wrap(err, "cannot build image")
 	}
-	outputPath := filepath.Join(cfg.Dist, pkgCfg.ID, "package.xpkg")
+	outputPath := build.GetXPackageOutputPath(cfg, pkgCfg)
 	if err != nil {
 		return err
 	}
