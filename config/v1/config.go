@@ -1,9 +1,10 @@
 package v1
 
 type Config struct {
-	XPackages []XPackageConfig `json:"xpackages"`
-	Dist      string           `json:"dist"`
-	Dockers   []DockerConfig   `json:"dockers"`
+	ProjectName string           `json:"project_name"`
+	XPackages   []XPackageConfig `json:"xpackages"`
+	Dist        string           `json:"dist"`
+	Dockers     []DockerConfig   `json:"dockers"`
 }
 
 type XPackageConfig struct {

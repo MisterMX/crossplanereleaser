@@ -41,6 +41,7 @@ func Parse(fsys afero.Fs, filename string) (*v1.Config, error) {
 }
 
 func fillDefaults(filename string, cfg *v1.Config) error {
+	cfg.ProjectName = valueOrFallback(cfg.ProjectName, filepath.Base(filepath.Dir(filename)))
 	cfg.Dist = valueOrFallback(cfg.Dist, "dist")
 
 	for i := range cfg.XPackages {
@@ -50,9 +51,8 @@ func fillDefaults(filename string, cfg *v1.Config) error {
 			if len(cfg.XPackages) > 1 {
 				return errors.New("package ID is required if there is more than one package")
 			}
-			// If there is only one package use the base name of the directory
-			// as package ID.
-			cfg.XPackages[i].ID = filepath.Base(filepath.Dir(filename))
+			// If there is only one package use the project name as ID
+			cfg.XPackages[i].ID = cfg.ProjectName
 		}
 	}
 	return nil

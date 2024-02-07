@@ -78,3 +78,11 @@ func (g *GitCLIBackend) GetCurrentBranch() (string, error) {
 	}
 	return branchesSplit[0], nil
 }
+
+func (g *GitCLIBackend) IsGitTreeClean() (bool, error) {
+	out, err := g.run("status", "--porcelain")
+	if err != nil {
+		return false, err
+	}
+	return out == "", nil
+}

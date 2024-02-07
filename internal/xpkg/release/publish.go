@@ -7,7 +7,6 @@ import (
 	"github.com/pkg/errors"
 
 	configv1 "github.com/mistermx/xpreleaser/config/v1"
-	"github.com/mistermx/xpreleaser/internal/git"
 	"github.com/mistermx/xpreleaser/internal/xpkg/build"
 )
 
@@ -15,18 +14,14 @@ type ImagePublisherBackend interface {
 	Put(ref name.Reference, img v1.Image) error
 }
 
-func PublishPackages(cfg *configv1.Config, g git.Backend) error {
-	tmplData, err := buildTemplateData(g, git.RefHead)
-	if err != nil {
-		return err
-	}
+func PublishPackages(cfg *configv1.Config) error {
 	for _, docker := range cfg.Dockers {
-		publishForDocker(cfg, &docker, tmplData)
+		publishForDocker(cfg, &docker)
 	}
 	return nil
 }
 
-func publishForDocker(cfg *configv1.Config, docker *configv1.DockerConfig, tmplData *templateData) error {
+func publishForDocker(cfg *configv1.Config, docker *configv1.DockerConfig) error {
 	keychain, err := BuildKeyChainFromConfig(docker.Logins)
 	if err != nil {
 		return errors.Wrap(err, "cannot setup docker keychain")
@@ -36,7 +31,7 @@ func publishForDocker(cfg *configv1.Config, docker *configv1.DockerConfig, tmplD
 	if err != nil {
 		return err
 	}
-	imgRefs, err := imageTemplatesAsRefs(docker.ImageTemplates, tmplData)
+	imgRefs, err := imageNamesAsRefs(docker.ImageTemplates)
 	if err != nil {
 		return err
 	}
@@ -76,13 +71,9 @@ func selectXPackageConfigsByIDs(cfg *configv1.Config, pkgIDs []string) ([]config
 	return selected, nil
 }
 
-func imageTemplatesAsRefs(imageTemplates []string, tmplData *templateData) ([]name.Reference, error) {
+func imageNamesAsRefs(imageTemplates []string) ([]name.Reference, error) {
 	refs := make([]name.Reference, len(imageTemplates))
-	for i, tmpl := range imageTemplates {
-		refStr, err := renderImageTemplate(tmpl, tmplData)
-		if err != nil {
-			return nil, errors.Wrapf(err, "%d", i)
-		}
+	for i, refStr := range imageTemplates {
 		ref, err := name.ParseReference(refStr)
 		if err != nil {
 			return nil, errors.Wrapf(err, "%d", i)

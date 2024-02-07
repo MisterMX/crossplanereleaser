@@ -1,4 +1,4 @@
-module github.com/mistermx/xpreleaser
+module github.com/mistermx/crossplanereleaser
 
 go 1.21.6
 
@@ -6,7 +6,6 @@ require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/awslabs/amazon-ecr-credential-helper/ecr-login v0.0.0-20230510185313-f5e39e5f34c7
 	github.com/chrismellard/docker-credential-acr-env v0.0.0-20230304212654-82a0ddb27589
-	github.com/go-log/log v0.2.0
 	github.com/google/go-containerregistry v0.19.0
 	github.com/mistermx/go-utils/k8s v0.0.0-20240130135253-12a66979ace7
 	github.com/pkg/errors v0.9.1

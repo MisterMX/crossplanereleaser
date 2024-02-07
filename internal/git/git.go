@@ -17,6 +17,7 @@ type Backend interface {
 	GetCommitSHA(ref Ref) (string, error)
 	GetCommitCount(ref Ref) (int, error)
 	GetCurrentBranch() (string, error)
+	IsGitTreeClean() (bool, error)
 }
 
 var (

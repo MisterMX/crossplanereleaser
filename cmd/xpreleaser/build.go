@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/afero"
 
 	v1 "github.com/mistermx/xpreleaser/config/v1"
-	"github.com/mistermx/xpreleaser/internal/config"
+	"github.com/mistermx/xpreleaser/internal/git"
 	"github.com/mistermx/xpreleaser/internal/xpkg/build"
 	"github.com/mistermx/xpreleaser/internal/xpkg/parse"
 )
@@ -16,13 +16,10 @@ import (
 type buildCmd struct{}
 
 func (c *buildCmd) Run(fsys afero.Fs) error {
-	cfgFileName, err := config.FindConfigFile(fsys)
+	g := git.NewGitCLIBackend()
+	cfg, err := getConfig(fsys, g)
 	if err != nil {
-		return errors.Wrap(err, "cannot find config file")
-	}
-	cfg, err := config.Parse(fsys, cfgFileName)
-	if err != nil {
-		return errors.Wrap(err, "cannot parse config file")
+		return err
 	}
 	return buildPackages(fsys, cfg)
 }
