@@ -23,7 +23,7 @@ type ProjectProperties struct {
 	GitTreeState string
 }
 
-func BuildProjectProperties(g git.Backend, cfg *v1.Config) (*ProjectProperties, error) {
+func BuildProjectProperties(g git.Client, cfg *v1.Config) (*ProjectProperties, error) {
 	props := &ProjectProperties{
 		ProjectName: cfg.ProjectName,
 		Env:         getEnvMap(),

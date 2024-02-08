@@ -12,7 +12,7 @@ const (
 	RefHead Ref = "HEAD"
 )
 
-type Backend interface {
+type Client interface {
 	GetTag(ref Ref) (string, error)
 	GetCommitSHA(ref Ref) (string, error)
 	GetCommitCount(ref Ref) (int, error)
@@ -33,7 +33,7 @@ func IsErrNoBranch(err error) bool {
 	return err == errNoBranch
 }
 
-func GetVersion(git Backend, ref Ref) (string, error) {
+func GetVersion(git Client, ref Ref) (string, error) {
 	tag, err := git.GetTag(ref)
 	if err == nil || !IsErrNoTag(err) {
 		return tag, err
@@ -41,7 +41,7 @@ func GetVersion(git Backend, ref Ref) (string, error) {
 	return getUntaggedVersion(git, ref)
 }
 
-func getUntaggedVersion(git Backend, ref Ref) (string, error) {
+func getUntaggedVersion(git Client, ref Ref) (string, error) {
 	base := "v0.0.0"
 	revCount, err := git.GetCommitCount(ref)
 	if err != nil {

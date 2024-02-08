@@ -9,7 +9,7 @@ import (
 	"github.com/mistermx/crossplanereleaser/internal/git"
 )
 
-func getConfig(fsys afero.Fs, g git.Backend) (*v1.Config, error) {
+func getConfig(fsys afero.Fs, g git.Client) (*v1.Config, error) {
 	cfgFileName, err := config.FindConfigFile(fsys)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot find config file")

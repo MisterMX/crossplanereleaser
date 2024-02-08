@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	defaultConfigFileName = ".xpreleaser.yaml"
+	defaultConfigFileName = ".crossplanereleaser.yaml"
 )
 
 func FindConfigFile(_ afero.Fs) (string, error) {
@@ -54,6 +54,8 @@ func fillDefaults(filename string, cfg *v1.Config) error {
 			// If there is only one package use the project name as ID
 			cfg.XPackages[i].ID = cfg.ProjectName
 		}
+
+		cfg.XPackages[i].NameTemplate = valueOrFallback(cfg.XPackages[i].NameTemplate, cfg.XPackages[i].ID)
 	}
 	return nil
 }
