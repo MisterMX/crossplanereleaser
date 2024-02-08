@@ -1,0 +1,49 @@
+project_name: crossplanereleaser
+builds:
+  - id: crossplanereleaser
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      # - darwin
+    goarch:
+      - amd64
+      # - arm64
+    main: ./cmd/crossplanereleaser
+
+archives:
+  - id: crossplanereleaser
+    format: tar.gz
+    name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
+    builds:
+      - crossplanereleaser
+    wrap_in_directory: true
+    strip_parent_binary_folder: true
+    files:
+      - LICENSE.txt
+      - README.md
+
+checksum:
+  algorithm: sha256
+  name_template: 'checksums.txt'
+  ids:
+    - crossplanereleaser
+
+release:
+  mode: keep-existing
+  github:
+    owner: mistermx
+    name: crossplanereleaser
+
+changelog:
+  use: git
+  groups:
+    - title: New Features
+      regexp: '^[\w\d]+\sfeat(\([\w-_\d]+\))?!?:.*$'
+      order: 0
+    - title: Bug fixes
+      regexp: '^[\w\d]+\sfix(\([\w-_\d]+\))?!?:.*$'
+      order: 1
+    - title: Others
+      regexp: '^[\w\d]+\s(build|chore|ci|docs|style|refactor|perf|test)(\([\w-_\d]+\))?!?:.*$'
+      order: 999

@@ -7,11 +7,11 @@ import (
 	"github.com/spf13/afero"
 	"sigs.k8s.io/yaml"
 
-	v1 "github.com/mistermx/xpreleaser/config/v1"
+	v1 "github.com/mistermx/crossplanereleaser/config/v1"
 )
 
 const (
-	defaultConfigFileName = ".xpreleaser.yaml"
+	defaultConfigFileName = ".crossplanereleaser.yaml"
 )
 
 func FindConfigFile(_ afero.Fs) (string, error) {
@@ -41,6 +41,7 @@ func Parse(fsys afero.Fs, filename string) (*v1.Config, error) {
 }
 
 func fillDefaults(filename string, cfg *v1.Config) error {
+	cfg.ProjectName = valueOrFallback(cfg.ProjectName, filepath.Base(filepath.Dir(filename)))
 	cfg.Dist = valueOrFallback(cfg.Dist, "dist")
 
 	for i := range cfg.XPackages {
@@ -50,10 +51,11 @@ func fillDefaults(filename string, cfg *v1.Config) error {
 			if len(cfg.XPackages) > 1 {
 				return errors.New("package ID is required if there is more than one package")
 			}
-			// If there is only one package use the base name of the directory
-			// as package ID.
-			cfg.XPackages[i].ID = filepath.Base(filepath.Dir(filename))
+			// If there is only one package use the project name as ID
+			cfg.XPackages[i].ID = cfg.ProjectName
 		}
+
+		cfg.XPackages[i].NameTemplate = valueOrFallback(cfg.XPackages[i].NameTemplate, cfg.XPackages[i].ID)
 	}
 	return nil
 }
