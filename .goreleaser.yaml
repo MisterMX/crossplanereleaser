@@ -28,22 +28,3 @@ checksum:
   name_template: 'checksums.txt'
   ids:
     - crossplanereleaser
-
-release:
-  mode: keep-existing
-  github:
-    owner: mistermx
-    name: crossplanereleaser
-
-changelog:
-  use: git
-  groups:
-    - title: New Features
-      regexp: '^[\w\d]+\sfeat(\([\w-_\d]+\))?!?:.*$'
-      order: 0
-    - title: Bug fixes
-      regexp: '^[\w\d]+\sfix(\([\w-_\d]+\))?!?:.*$'
-      order: 1
-    - title: Others
-      regexp: '^[\w\d]+\s(build|chore|ci|docs|style|refactor|perf|test)(\([\w-_\d]+\))?!?:.*$'
-      order: 999
