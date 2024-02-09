@@ -10,6 +10,7 @@ builds:
       - amd64
       - arm64
     main: ./cmd/crossplanereleaser
+    binary: crossplanereleaser
 
 archives:
   - id: crossplanereleaser
@@ -17,7 +18,7 @@ archives:
     name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
     builds:
       - crossplanereleaser
-    wrap_in_directory: true
+    wrap_in_directory: false
     strip_parent_binary_folder: true
     files:
       - LICENSE.txt
