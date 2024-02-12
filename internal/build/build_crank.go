@@ -28,8 +28,9 @@ func (c CrankCLIBackend) exec(ctx context.Context, args ...string) error {
 
 func (c *CrankCLIBackend) BuildPackage(ctx context.Context, cfg *PackageBuildConfig) error {
 	args := []string{
+		"xpkg", "build",
 		fmt.Sprintf("--package-root=%s", cfg.PackageDir),
-		fmt.Sprintf("--output=%s", cfg.OutputPath),
+		fmt.Sprintf("--package-file=%s", cfg.OutputPath),
 	}
 	if cfg.ExamplesDir != "" {
 		args = append(args, fmt.Sprintf("--examples-root=%s", cfg.ExamplesDir))

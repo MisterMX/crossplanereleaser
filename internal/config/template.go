@@ -8,18 +8,18 @@ import (
 )
 
 func RenderConfigTemplates(cfg *v1.Config, props *ProjectProperties) error {
-	for di, docker := range cfg.Dockers {
-		for ii, imgTmpl := range docker.ImageTemplates {
+	for pi, push := range cfg.Pushes {
+		for ii, imgTmpl := range push.ImageTemplates {
 			var err error
-			cfg.Dockers[di].ImageTemplates[ii], err = renderTemplate(imgTmpl, props)
+			cfg.Pushes[pi].ImageTemplates[ii], err = renderTemplate(imgTmpl, props)
 			if err != nil {
 				return err
 			}
 		}
 	}
-	for pi, pkgCfg := range cfg.XPackages {
+	for pi, build := range cfg.Builds {
 		var err error
-		cfg.XPackages[pi].NameTemplate, err = renderTemplate(pkgCfg.NameTemplate, props)
+		cfg.Builds[pi].NameTemplate, err = renderTemplate(build.NameTemplate, props)
 		if err != nil {
 			return err
 		}

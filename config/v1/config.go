@@ -1,20 +1,20 @@
 package v1
 
 type Config struct {
-	ProjectName string           `json:"project_name"`
-	XPackages   []XPackageConfig `json:"xpackages"`
-	Dist        string           `json:"dist"`
-	Dockers     []DockerConfig   `json:"dockers"`
+	ProjectName string        `json:"project_name"`
+	Dist        string        `json:"dist"`
+	Builds      []BuildConfig `json:"builds"`
+	Pushes      []PushConfig  `json:"pushes"`
 }
 
-type XPackageConfig struct {
+type BuildConfig struct {
 	ID           string `json:"id"`
 	Dir          string `json:"dir"`
 	Examples     string `json:"examples"`
 	NameTemplate string `json:"name_template"`
 }
 
-type DockerConfig struct {
-	IDs            []string `json:"ids"`
+type PushConfig struct {
+	Build          string   `json:"build"`
 	ImageTemplates []string `json:"image_templates"`
 }

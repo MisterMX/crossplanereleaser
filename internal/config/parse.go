@@ -33,7 +33,7 @@ func Parse(fsys afero.Fs, filename string) (*v1.Config, error) {
 		return nil, err
 	}
 	cfg := &v1.Config{}
-	if err := yaml.Unmarshal(raw, cfg); err != nil {
+	if err := yaml.UnmarshalStrict(raw, cfg, yaml.DisallowUnknownFields); err != nil {
 		return nil, err
 	}
 	err = fillDefaults(filename, cfg)
@@ -44,18 +44,18 @@ func fillDefaults(filename string, cfg *v1.Config) error {
 	cfg.ProjectName = valueOrFallback(cfg.ProjectName, filepath.Base(filepath.Dir(filename)))
 	cfg.Dist = valueOrFallback(cfg.Dist, "dist")
 
-	for i := range cfg.XPackages {
-		cfg.XPackages[i].Examples = valueOrFallback(cfg.XPackages[i].Examples, "examples")
+	for i := range cfg.Builds {
+		cfg.Builds[i].Examples = valueOrFallback(cfg.Builds[i].Examples, "examples")
 
-		if cfg.XPackages[i].ID == "" {
-			if len(cfg.XPackages) > 1 {
-				return errors.New("package ID is required if there is more than one package")
+		if cfg.Builds[i].ID == "" {
+			if len(cfg.Builds) > 1 {
+				return errors.New("build ID is required if there is more than one build")
 			}
-			// If there is only one package use the project name as ID
-			cfg.XPackages[i].ID = cfg.ProjectName
+			// If there is only one build use the project name as ID
+			cfg.Builds[i].ID = cfg.ProjectName
 		}
 
-		cfg.XPackages[i].NameTemplate = valueOrFallback(cfg.XPackages[i].NameTemplate, cfg.XPackages[i].ID)
+		cfg.Builds[i].NameTemplate = valueOrFallback(cfg.Builds[i].NameTemplate, cfg.Builds[i].ID+".xpkg")
 	}
 	return nil
 }
