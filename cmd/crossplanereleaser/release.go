@@ -50,18 +50,33 @@ func (c *releaseCmd) Run(fsys afero.Fs) error {
 			return errors.Wrap(err, "build failed")
 		}
 	}
-	return c.publishPackages(ctx, cfg)
+	return errors.Wrap(c.publishPackages(ctx, cfg), "cannot push images")
 }
 
 func (c *releaseCmd) publishPackages(ctx context.Context, cfg *v1.Config) error {
-	for _, pkgCfg := range cfg.XPackages {
-		filename := getPackageOutputPath(cfg, &pkgCfg)
-		ref, err := name.ParseReference(pkgCfg.NameTemplate)
-		if err != nil {
-			return errors.Wrap(err, "cannot parse image name")
+	for _, push := range cfg.Pushes {
+		build := getBuildConfigByID(cfg, push.Build)
+		if build == nil {
+			return errors.Errorf("no build with ID %q", push.Build)
 		}
-		if err := c.publisher.PublishPackage(ctx, filename, ref); err != nil {
-			return errors.Wrapf(err, "cannot publish package %q", pkgCfg.ID)
+		filename := getPackageOutputPath(cfg, build)
+		for _, img := range push.ImageTemplates {
+			ref, err := name.ParseReference(img)
+			if err != nil {
+				return errors.Wrap(err, "cannot parse image name")
+			}
+			if err := c.publisher.PublishPackage(ctx, filename, ref); err != nil {
+				return errors.Wrapf(err, "cannot publish package %q", build.ID)
+			}
+		}
+	}
+	return nil
+}
+
+func getBuildConfigByID(cfg *v1.Config, buildID string) *v1.BuildConfig {
+	for _, b := range cfg.Builds {
+		if b.ID == buildID {
+			return &b
 		}
 	}
 	return nil
