@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -65,7 +66,8 @@ func getEnvMap() map[string]string {
 	environ := os.Environ()
 	m := make(map[string]string, len(environ))
 	for _, s := range os.Environ() {
-		split := strings.SplitN(s, "=", 1)
+		split := strings.SplitN(s, "=", 2)
+		fmt.Printf("%v\n", split)
 		m[split[0]] = split[1]
 	}
 	return m
