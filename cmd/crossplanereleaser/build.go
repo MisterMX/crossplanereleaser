@@ -36,9 +36,10 @@ func (c *buildCmd) Run(fsys afero.Fs) error {
 func (c *buildCmd) buildPackages(ctx context.Context, fsys afero.Fs, cfg *v1.Config) error {
 	for _, b := range cfg.Builds {
 		buildCfg := &build.PackageBuildConfig{
-			PackageDir:  b.Dir,
-			ExamplesDir: b.Examples,
-			OutputPath:  getPackageOutputPath(cfg, &b),
+			PackageDir:      b.Dir,
+			ExamplesDir:     b.Examples,
+			OutputPath:      getPackageOutputPath(cfg, &b),
+			RuntimeImageTar: b.RuntimeImageTar,
 		}
 		// We need to call mkdir here because crank doesn't do it for us
 		if err := fsys.MkdirAll(filepath.Dir(buildCfg.OutputPath), 0755); err != nil {

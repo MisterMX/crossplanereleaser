@@ -5,9 +5,10 @@ import (
 )
 
 type PackageBuildConfig struct {
-	PackageDir  string
-	ExamplesDir string
-	OutputPath  string
+	PackageDir      string
+	ExamplesDir     string
+	OutputPath      string
+	RuntimeImageTar string
 }
 
 type BuilderBackend interface {
