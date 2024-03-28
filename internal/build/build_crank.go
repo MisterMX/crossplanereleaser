@@ -35,6 +35,8 @@ func (c *CrankCLIBackend) BuildPackage(ctx context.Context, cfg *PackageBuildCon
 	if cfg.ExamplesDir != "" {
 		args = append(args, fmt.Sprintf("--examples-root=%s", cfg.ExamplesDir))
 	}
-	// TODO: Support setting --controller-tar option
+	if cfg.RuntimeImageTar != "" {
+		args = append(args, fmt.Sprintf("--embed-runtime-image-tarball=%s", cfg.RuntimeImageTar))
+	}
 	return c.exec(ctx, args...)
 }

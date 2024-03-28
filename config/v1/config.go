@@ -8,10 +8,11 @@ type Config struct {
 }
 
 type BuildConfig struct {
-	ID           string `json:"id"`
-	Dir          string `json:"dir"`
-	Examples     string `json:"examples"`
-	NameTemplate string `json:"name_template"`
+	ID              string `json:"id"`
+	Dir             string `json:"dir"`
+	Examples        string `json:"examples"`
+	NameTemplate    string `json:"name_template"`
+	RuntimeImageTar string `json:"runtime_image_tar"`
 }
 
 type PushConfig struct {
