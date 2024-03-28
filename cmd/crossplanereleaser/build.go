@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"path/filepath"
+	"slices"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
@@ -13,6 +14,8 @@ import (
 )
 
 type buildCmd struct {
+	ID []string `help:"Build only the specified build ids"`
+
 	git     git.Client
 	builder build.BuilderBackend
 }
@@ -35,6 +38,10 @@ func (c *buildCmd) Run(fsys afero.Fs) error {
 
 func (c *buildCmd) buildPackages(ctx context.Context, fsys afero.Fs, cfg *v1.Config) error {
 	for _, b := range cfg.Builds {
+		if !c.shouldBeBuilt(b) {
+			continue
+		}
+
 		buildCfg := &build.PackageBuildConfig{
 			PackageDir:      b.Dir,
 			ExamplesDir:     b.Examples,
@@ -51,6 +58,13 @@ func (c *buildCmd) buildPackages(ctx context.Context, fsys afero.Fs, cfg *v1.Con
 		}
 	}
 	return nil
+}
+
+func (c *buildCmd) shouldBeBuilt(buildCfg v1.BuildConfig) bool {
+	if len(c.ID) == 0 {
+		return true
+	}
+	return slices.Contains(c.ID, buildCfg.ID)
 }
 
 func getPackageOutputPath(cfg *v1.Config, build *v1.BuildConfig) string {
