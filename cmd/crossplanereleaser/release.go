@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"os"
 
 	"github.com/google/go-containerregistry/pkg/name"
 	"github.com/pkg/errors"
@@ -54,21 +56,42 @@ func (c *releaseCmd) Run(fsys afero.Fs) error {
 }
 
 func (c *releaseCmd) publishPackages(ctx context.Context, cfg *v1.Config) error {
-	for _, push := range cfg.Pushes {
-		build := getBuildConfigByID(cfg, push.Build)
-		if build == nil {
-			return errors.Errorf("no build with ID %q", push.Build)
+	someBuildsFailed := false
+	for i, push := range cfg.Pushes {
+		if err := c.publishPackage(ctx, cfg, push); err != nil {
+			fmt.Fprintf(os.Stderr, "publish build %d %q failed: %s", i, push.Build, err.Error())
+			someBuildsFailed = true
 		}
-		filename := getPackageOutputPath(cfg, build)
-		for _, img := range push.ImageTemplates {
-			ref, err := name.ParseReference(img)
-			if err != nil {
-				return errors.Wrap(err, "cannot parse image name")
-			}
-			if err := c.publisher.PublishPackage(ctx, filename, ref); err != nil {
-				return errors.Wrapf(err, "cannot publish package %q", build.ID)
-			}
+	}
+	if someBuildsFailed {
+		return errors.New("not all builds and pushes were successful")
+	}
+	return nil
+}
+
+func (c *releaseCmd) publishPackage(ctx context.Context, cfg *v1.Config, push v1.PushConfig) error {
+	build := getBuildConfigByID(cfg, push.Build)
+	if build == nil {
+		return errors.Errorf("no build with ID %q", push.Build)
+	}
+	filename := getPackageOutputPath(cfg, build)
+
+	somePublishFailed := false
+	for _, img := range push.ImageTemplates {
+		ref, err := name.ParseReference(img)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, errors.Wrap(err, "cannot parse image name").Error())
+			somePublishFailed = true
+			continue
 		}
+		if err := c.publisher.PublishPackage(ctx, filename, ref); err != nil {
+			fmt.Fprintln(os.Stderr, errors.Wrapf(err, "cannot publish package %q", build.ID).Error())
+			somePublishFailed = true
+			continue
+		}
+	}
+	if somePublishFailed {
+		return errors.New("unable to publish all images")
 	}
 	return nil
 }
