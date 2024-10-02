@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"slices"
 
 	"github.com/google/go-containerregistry/pkg/name"
 	"github.com/pkg/errors"
@@ -20,7 +21,8 @@ type releaseCmd struct {
 	builder   build.BuilderBackend
 	publisher publish.PackagePublisher
 
-	Skip string `help:"Specify steps to skip"`
+	Skip        string   `help:"Specify steps to skip"`
+	PushOnlyIDs []string `name:"push-only-ids" help:"Specify the IDs of the pushes that should be published. If not provided all pushes will be published."`
 }
 
 func (c *releaseCmd) BeforeApply() error {
@@ -70,6 +72,10 @@ func (c *releaseCmd) publishPackages(ctx context.Context, cfg *v1.Config) error 
 }
 
 func (c *releaseCmd) publishPackage(ctx context.Context, cfg *v1.Config, push v1.PushConfig) error {
+	if !c.shouldBePublished(push) {
+		return nil
+	}
+
 	build := getBuildConfigByID(cfg, push.Build)
 	if build == nil {
 		return errors.Errorf("no build with ID %q", push.Build)
@@ -94,6 +100,16 @@ func (c *releaseCmd) publishPackage(ctx context.Context, cfg *v1.Config, push v1
 		return errors.New("unable to publish all images")
 	}
 	return nil
+}
+
+func (c *releaseCmd) shouldBePublished(push v1.PushConfig) bool {
+	if len(c.PushOnlyIDs) == 0 {
+		return true
+	}
+	if push.ID == "" {
+		return false
+	}
+	return slices.Contains(c.PushOnlyIDs, push.ID)
 }
 
 func getBuildConfigByID(cfg *v1.Config, buildID string) *v1.BuildConfig {
