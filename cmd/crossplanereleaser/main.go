@@ -18,7 +18,7 @@ func main() {
 	fs := afero.NewOsFs()
 
 	ctx := kong.Parse(&cli,
-		kong.Name("cnpctl"),
+		kong.Name("crossplanereleaser"),
 		kong.Description("CLI utility to deal with certain tasks around CNP@DBNetz."),
 		kong.BindTo(fs, (*afero.Fs)(nil)),
 	)

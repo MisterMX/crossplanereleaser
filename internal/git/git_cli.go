@@ -36,7 +36,7 @@ func (g *GitCLIBackend) GetCommitCount(ref Ref) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	return strconv.Atoi(out)
+	return strconv.Atoi(strings.TrimSpace(out))
 }
 
 func (g *GitCLIBackend) GetTag(ref Ref) (string, error) {
