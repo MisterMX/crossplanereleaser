@@ -16,6 +16,7 @@ type BuildConfig struct {
 }
 
 type PushConfig struct {
+	ID             string   `json:"id"`
 	Build          string   `json:"build"`
 	ImageTemplates []string `json:"image_templates"`
 }

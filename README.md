@@ -16,6 +16,34 @@ To just build artifacts:
 crossplanereleaser build
 ```
 
+An example `.crossplanereleaser.yaml` config can look like this
+
+```yaml
+project_name: my-project
+dist: dist/my-project
+
+builds:
+  - id: composition-package
+    dir: package/compositions
+    examples: examples
+  - id: function-package
+    dir: package/function
+    examples: "IGNORE"
+    # Use a prebuilt image tar that contains the function binary, i.e. by Ko
+    runtime_image_tar: dist/function-base-image.tar
+
+pushes:
+  - build: composition-package
+    image_templates:
+      - "my-registry.com/my-project/package-compositions:{{ .Tag }}"
+      - "my-registry.com/my-project/package-compositions:{{ .FullCommit }}"
+  - id: function # Used to manually filter for images to be pushed
+    build: function-package
+    image_templates:
+      - "my-registry.com/my-project/package-function:{{ .Tag }}"
+      - "my-registry.com/my-project/package-function:{{ .FullCommit }}"
+```
+
 # Requirements
 
 Crossplanereleaser does not deal packages by itself but instead uses external
